@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARG QR Puzzle</title>
+<style>
+  body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: #111;
+    color: #eee;
+  }
+  h1 { margin-bottom: 20px; }
+  .grid {
+    display: grid;
+    grid-template-columns: 200px 200px;
+    grid-template-rows: 200px 200px;
+    gap: 10px;
+  }
+  .panel {
+    background: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 2px solid #444;
+    border-radius: 8px;
+    position: relative;
+  }
+  .panel img {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  input {
+    margin-top: 5px;
+    padding: 5px;
+    width: 90%;
+    border-radius: 4px;
+    border: 1px solid #555;
+    background: #333;
+    color: #eee;
+  }
+  button {
+    margin-top: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    background: #5c9;
+    color: #111;
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<h1>ARG QR Puzzle</h1>
+<div class="grid">
+  <div class="panel" id="panel1">
+    <div>Panel 1</div>
+    <input type="text" id="input1" placeholder="Enter code">
+    <button onclick="checkPanel(1)">Unlock</button>
+    <img id="img1" src="qr1.png">
+  </div>
+  <div class="panel" id="panel2">
+    <div>Panel 2</div>
+    <input type="text" id="input2" placeholder="Enter code">
+    <button onclick="checkPanel(2)">Unlock</button>
+    <img id="img2" src="qr2.png">
+  </div>
+  <div class="panel" id="panel3">
+    <div>Panel 3</div>
+    <input type="text" id="input3" placeholder="Enter code">
+    <button onclick="checkPanel(3)">Unlock</button>
+    <img id="img3" src="qr3.png">
+  </div>
+  <div class="panel" id="panel4">
+    <div>Panel 4</div>
+    <input type="text" id="input4" placeholder="Enter code">
+    <button onclick="checkPanel(4)">Unlock</button>
+    <img id="img4" src="qr4.png">
+  </div>
+</div>
+
+<script>
+  // Replace these with your secret codes
+  const correctCodes = {
+    1: "link1",
+    2: "link2",
+    3: "link3",
+    4: "link4"
+  };
+
+  // Load progress from localStorage
+  const progress = JSON.parse(localStorage.getItem("argProgress") || "{}");
+  for (let i = 1; i <= 4; i++) {
+    if (progress[i]) document.getElementById("img"+i).style.display = "block";
+  }
+
+  function checkPanel(panelNumber) {
+    const input = document.getElementById("input"+panelNumber).value.trim();
+    if(input === correctCodes[panelNumber]) {
+      document.getElementById("img"+panelNumber).style.display = "block";
+      progress[panelNumber] = true;
+      localStorage.setItem("argProgress", JSON.stringify(progress));
+      checkAllUnlocked();
+    } else {
+      alert("Incorrect! Try again.");
+    }
+  }
+
+  function checkAllUnlocked() {
+    if(Object.keys(progress).length === 4) {
+      alert("🎉 All pieces unlocked! Scan the QR code!");
+    }
+  }
+</script>
+
+</body>
+</html>
